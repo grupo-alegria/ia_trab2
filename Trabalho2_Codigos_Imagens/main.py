@@ -4,7 +4,7 @@ from torchvision import datasets  # Importa os datasets da biblioteca torchvisio
 from torchvision.transforms import v2  # Importa as transformações de imagens da torchvision
 import time
 
-print(torch.cuda.is_available())
+print('torch.cuda.is_available() : ',torch.cuda.is_available())
 
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
