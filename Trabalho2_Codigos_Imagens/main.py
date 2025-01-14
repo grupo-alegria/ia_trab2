@@ -3,9 +3,7 @@ import torch  # Importa o PyTorch, que é utilizado para criar redes neurais e t
 from torchvision import datasets  # Importa os datasets da biblioteca torchvision
 from torchvision.transforms import v2  # Importa as transformações de imagens da torchvision
 import time
-
-print('torch.cuda.is_available() : ',torch.cuda.is_available())
-
+from itertools import product
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
 def define_transforms(height, width):
@@ -43,19 +41,31 @@ if __name__ == '__main__':
     cnn = CNN(train_data, validation_data, test_data, 8)
     
     # Configurações para treinamento do modelo
-    replicacoes = 10  # Número de repetições para treinar o modelo
-    model_names = ['mobilenet_v3_large']  # Nome do modelo a ser utilizado (AlexNet)
-    epochs = [10]  # Número de épocas para treinamento
-    learning_rates = [0.001]  # Taxa de aprendizado, velocidade com que a Rede Neural aprende
-    weight_decays = [0]  # Decaimento de peso
+    replicacoes = 2  # Número de repetições para treinar o modelo
+    model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+    epochs = 1 # [10, 20]  # Número de épocas para treinamento
+    learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
+    weight_decays = [0, 0.0001]  # Decaimento de peso
 
-    inicio = time.time()  # Marca o início do tempo de treinamento
-    
-    # Treina a CNN utilizando os parâmetros definidos
-    acc_media, rep_max = cnn.create_and_train_cnn(model_names[0], epochs[0], learning_rates[0], weight_decays[0], replicacoes)
-    
-    fim = time.time()  # Marca o final do tempo de treinamento
-    duracao = fim - inicio  # Calcula a duração do treinamento
-    
-    # Exibe os resultados do treinamento
-    print(f"{model_names[0]}-{epochs[0]}-{learning_rates[0]}-{weight_decays[0]}-Acurácia média: {acc_media} - Melhor replicação: {rep_max} - Tempo:{duracao}")
+    # Gera todas as combinações possíveis de parâmetros
+    parameter_combinations = product(model_names, epochs, learning_rates, weight_decays)
+
+    # Itera sobre cada combinação de parâmetros
+    for model_name, num_epochs, learning_rate, weight_decay in parameter_combinations:
+        inicio = time.time()  # Marca o início do tempo de treinamento
+
+        # Treina a CNN utilizando os parâmetros definidos
+        acc_media, rep_max = cnn.create_and_train_cnn(model_name, num_epochs, learning_rate, weight_decay, replicacoes)
+
+        fim = time.time()  # Marca o final do tempo de treinamento
+        duracao = fim - inicio  # Calcula a duração do treinamento
+
+        # Exibe os resultados do treinamento
+        print(f"\nParâmetro de modelo: {model_name}")
+        print(f"Parâmetro de quantidade de épocas: {num_epochs}")
+        print(f"Parâmetro de Learning Rate: {learning_rate}")
+        print(f"Parâmetro de Weight Decay: {weight_decay}")
+        print(f"Acurácia Média: {acc_media}")
+        print(f"Melhor replicação: {rep_max}")
+        print(f"Tempo: {duracao:.2f} segundos\n")
+        print("-----------------------------------")
