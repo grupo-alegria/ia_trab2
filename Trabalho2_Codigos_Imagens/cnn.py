@@ -17,7 +17,7 @@ class CNN:
         self.test_loader = data.DataLoader(test_data, batch_size=batch_size, shuffle=False)
         # Cria um DataLoader para o conjunto de teste, sem embaralhamento dos dados.
         
-        self.device = torch.device("cpu")  # Define que o treinamento e as operações ocorrerão na CPU (pode ser alterado para "cuda" se houver GPU disponível).
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # Define que o treinamento e as operações ocorrerão na CPU (pode ser alterado para "cuda" se houver GPU disponível).
 
     def create_and_train_cnn(self, model_name, num_epochs, learning_rate, weight_decay, replicacoes):
         # Função principal que cria e treina o modelo várias vezes (definido por 'replicacoes') e calcula a média da acurácia.
