@@ -138,14 +138,23 @@ if __name__ == '__main__':
         print(f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos\n")
 
     elif escolha == "3":
-        # Acesse o objeto remoto via Proxy
-        ai_trainer = Pyro5.api.Proxy("PYRONAME:example.ai_trainer")
+        # Acesse o objeto remoto via Proxy usando um gerenciador de contexto
+        with Pyro5.api.Proxy("PYRONAME:example.ai_trainer") as ai_trainer:
+            try:
+                # Chama o método train remotamente
+                resultados = ai_trainer.train("alexnet", 1, 0.001, 1, 2)
 
-        # Chama o método train remotamente
-        resultados = ai_trainer.train("alexnet", 1, 0.001, 1, 2)
+                # Exibe os resultados recebidos
+                print("Resultados do treinamento:", resultados)
+                
+                # Chama o método train remotamente
+                resultados = ai_trainer.train("mobilenet_v3_small", 1, 0.001, 1, 2)
 
-        # Exibe os resultados recebidos
-        print("Resultados do treinamento:", resultados)
+                # Exibe os resultados recebidos
+                print("Resultados do treinamento:", resultados)
+            except Exception as e:
+                print("Erro durante a comunicação com o servidor:", e)
+
     else:
         print("Escolha inválida. Execute o programa novamente e selecione uma opção válida.")
 
