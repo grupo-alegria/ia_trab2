@@ -6,8 +6,6 @@ import time
 from itertools import product
 import os
 from multiprocessing import Pool, cpu_count
-import json
-import Pyro5.api
 
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
@@ -138,14 +136,12 @@ if __name__ == '__main__':
         print(f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos\n")
 
     elif escolha == "3":
-        # Acesse o objeto remoto via Proxy
-        ai_trainer = Pyro5.api.Proxy("PYRONAME:example.ai_trainer")
-
-        # Chama o método train remotamente
-        resultados = ai_trainer.train("alexnet", 1, 0.001, 1, 2)
-
-        # Exibe os resultados recebidos
-        print("Resultados do treinamento:", resultados)
+        inicio_sistema = time.time()  # Início do sistema distribuído multiprocesso
+        print("Sistema Distribuído em Multiprocesso Escolhido.")
+        # Lógica futura para processamento distribuído
+        fim_sistema = time.time()
+        print(f"Tempo total para o sistema Distribuído Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos\n")
+    
     else:
         print("Escolha inválida. Execute o programa novamente e selecione uma opção válida.")
 
