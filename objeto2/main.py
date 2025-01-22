@@ -1,3 +1,5 @@
+# Must run 'python.exe -m Pyro5.nameserver' command before run server
+
 import time
 import Pyro5.api
 from itertools import product

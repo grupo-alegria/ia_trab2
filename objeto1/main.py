@@ -64,16 +64,6 @@ class AI_trainer(object):
         fim = time.time()  # Marca o final do tempo de treinamento
         duracao = fim - inicio  # Calcula a duração do treinamento
 
-        # Exibe os resultados
-        print(f"Parâmetro de modelo: {model_name}")
-        print(f"Parâmetro de quantidade de épocas: {num_epochs}")
-        print(f"Parâmetro de Learning Rate: {learning_rate}")
-        print(f"Parâmetro de Weight Decay: {weight_decay}")
-        print(f"Acurácia Média: {acc_media}")
-        print(f"Melhor replicação: {rep_max}")
-        print(f"Tempo: {duracao:.2f} segundos\n")
-        print("-----------------------------------")
-
         resultados = {
             "Parâmetro de modelo": model_name,
             "Parâmetro de quantidade de épocas": num_epochs,
