@@ -65,19 +65,21 @@ class AI_trainer(object):
         duracao = fim - inicio  # Calcula a duração do treinamento
 
         resultados = {
-            "Parâmetro de modelo": model_name,
-            "Parâmetro de quantidade de épocas": num_epochs,
-            "Parâmetro de Learning Rate": learning_rate,
-            "Parâmetro de Weight Decay": weight_decay,
-            "Acurácia Média": acc_media,
-            "Melhor replicação": rep_max,
+            "Parametro de modelo": model_name,
+            "Parametro de quantidade de epocas": num_epochs,
+            "Parametro de Learning Rate": learning_rate,
+            "Parametro de Weight Decay": weight_decay,
+            "Acuracia Media": acc_media,
+            "Melhor replicacao": rep_max,
             "Tempo": duracao,
             "Unidade de Tempo": "segundos"
         }
 
-        # Exibe os resultados como um JSON
+        # Adiciona o dicionário para a estrutura JSON
         print(json.dumps(resultados, indent=4))
-        return resultados
+        resultadosJson = json.dumps(resultados, indent=4)
+
+        return resultadosJson
 
 
 if __name__ == '__main__':

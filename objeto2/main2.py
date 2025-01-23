@@ -86,7 +86,8 @@ class AI_trainer:
         }
 
         print(json.dumps(resultados, indent=4))
-        return resultados
+        resultadosJson = json.dumps(resultados, indent=4)
+        return resultadosJson
 
     def submit_task(self, params):
         """
