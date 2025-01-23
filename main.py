@@ -155,48 +155,8 @@ if __name__ == '__main__':
             except Exception as e:
                 print("Erro durante a comunicação com o servidor:", e)
     
-    elif escolha == "4" :         
-        @Pyro5.api.expose
-        class Client:
-            def __init__(self):
-                self.task_queue = queue.Queue()
-                self.load_tasks()
-
-            def load_tasks(self):
-                """
-                Carrega as tarefas de parâmetros na fila.
-                """
-                tasks = [
-                    ["alexnet", 10, 0.001, 0.01],
-                    ["mobilenet_v3_large", 20, 0.0001, 0.005],
-                    ["vgg11", 15, 0.0005, 0.002]
-                ]
-                for task in tasks:
-                    self.task_queue.put(task)
-
-            def request_params(self):
-                """
-                Retorna o próximo conjunto de parâmetros ou None se a fila estiver vazia.
-                """
-                if not self.task_queue.empty():
-                    return self.task_queue.get()
-                return None
-
-            def receive_results(self, results):
-                """
-                Recebe e exibe os resultados do servidor.
-                """
-                print("Resultados recebidos:")
-                print(results)
-
+    elif escolha == "4" :      
+           
         fim_total = time.time()
         print(f"Tempo total de execução do programa: {fim_total - inicio_total:.2f} segundos")
         
-'''
-ótimo, agora do lado do objeto rmi, devemos criar um método que dê request para processar um único vetor por vez;
-o objeto rmi cria uma pool de threads do tamanho da quantidade de processadores do computador que o executa;
-cada thread dá request num conjunto de parâmetros;
-o cliente envia  ex:   ['alexnet', 1, 0.001, 0]
-a thread do objeto rmi os processa e devolve ao cliente os dados do processamento;
-o cliente envia um novo vetor de parâmetros
-'''
