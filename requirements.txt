@@ -1,0 +1,3 @@
+torch>=2.5.1  # Versão mínima para garantir compatibilidade com torchvision.transforms.v2
+torchvision>=0.20.1  # Compatível com torch>=2.5.1
+Pyro5>=5.15  # Versão mínima do Pyro5
