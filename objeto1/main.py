@@ -11,6 +11,7 @@ from multiprocessing import Pool, cpu_count
 import cnn
 import json
 import Pyro5.api
+import concurrent.futures
 
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
@@ -54,6 +55,44 @@ class AI_trainer(object):
         self.train_data = train_data
         self.validation_data = validation_data
         self.test_data = test_data
+        
+    def process_tasks(self, client_proxy):
+        """
+        Processa as tarefas enviadas pelo cliente.
+        Cada thread solicita um conjunto de parâmetros do cliente, executa o treinamento e retorna os resultados.
+        """
+        while True:
+            try:
+                # Solicita parâmetros do cliente
+                params = client_proxy.request_params()
+                if not params:  # Finaliza se o cliente não tiver mais tarefas
+                    break
+
+                print(f"Thread processando parâmetros: {params}")
+
+                # Processa os parâmetros de treinamento
+                model_name, num_epochs, learning_rate, weight_decay = params
+                resultados = self.train(model_name, num_epochs, learning_rate, weight_decay, 2)
+
+                # Retorna os resultados ao cliente
+                client_proxy.receive_results(resultados)
+
+            except Exception as e:
+                print(f"Erro ao processar tarefa: {e}")
+                break
+            
+    @Pyro5.api.expose            
+    def initPool(self, client_uri):
+        """
+        Inicializa o pool de threads para processar tarefas do cliente.
+        """
+        client_proxy = Pyro5.api.Proxy(client_uri)
+        num_nucleos = cpu_count()
+        print(f"Inicializando pool de threads com {num_nucleos} núcleos...")
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=num_nucleos) as executor:
+            futures = [executor.submit(self.process_tasks, client_proxy) for _ in range(num_nucleos)]
+            concurrent.futures.wait(futures)
 
     def train(self, model_name, num_epochs, learning_rate, weight_decay, replications):
         cnn = CNN(self.train_data, self.validation_data, self.test_data, 8)  # Instancia o modelo CNN
