@@ -8,7 +8,7 @@ import os
 from multiprocessing import Pool, cpu_count
 import json
 import Pyro5.api
-
+import Client
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
 def define_transforms(height, width):
@@ -154,42 +154,19 @@ if __name__ == '__main__':
                 print("Resultados do treinamento:", resultados)
             except Exception as e:
                 print("Erro durante a comunicação com o servidor:", e)
-    elif escolha == "4" : 
-        uri = "PYRONAME:example.ai_trainer"
-        trainer = Pyro5.api.Proxy(uri)
-
-
-        # Definição das listas de parâmetros
-        model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
-        epochs = [10, 20]  # Número de épocas para treinamento
-        learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
-        weight_decays = [0, 0.0001]  # Decaimento de peso
-
-        # Gera todas as combinações possíveis de parâmetros
-        parameter_combinations_list = list(product(model_names, epochs, learning_rates, weight_decays))
-
-        # Transforma as tuplas em listas (opcional, se precisa estritamente de listas e não de tuplas)
-        parameter_combinations = [list(combination) for combination in parameter_combinations_list]
-        parameter_combinations.append(['exit', 0, 0, 0])
-
-        # Exibe o vetor de vetores
-        i = 1
-        for vector in parameter_combinations:
-            print(i,"  ",vector)
-            i+=1
-
-        #trainer.train_parallel(parameter_combinations)
-    else:
-        print("Escolha inválida. Execute o programa novamente e selecione uma opção válida.")
-
-    fim_total = time.time()
-    print(f"Tempo total de execução do programa: {fim_total - inicio_total:.2f} segundos")
     
-'''
-ótimo, agora do lado do objeto rmi, devemos criar um método que dê request para processar um único vetor por vez;
-o objeto rmi cria uma pool de threads do tamanho da quantidade de processadores do computador que o executa;
-cada thread dá request num conjunto de parâmetros;
-o cliente envia  ex:   ['alexnet', 1, 0.001, 0]
-a thread do objeto rmi os processa e devolve ao cliente os dados do processamento;
-o cliente envia um novo vetor de parâmetros
-'''
+    elif escolha == "4" :      
+        print("Sistema Distribuído e Multiprocesso Escolhido.")
+
+        with Pyro5.api.Proxy("PYRONAME:example.ai_trainer") as ai_trainer:
+            # Instancia o cliente
+            client = Client.Client()
+            try:
+                # Inicia o pool de threads no servidor com o cliente
+                ai_trainer.initPool(Pyro5.api.Proxy(client))
+            except Exception as e:
+                print(f"Erro durante a execução do sistema distribuído: {e}")
+   
+        fim_total = time.time()
+        print(f"Tempo total de execução do programa: {fim_total - inicio_total:.2f} segundos")
+        
