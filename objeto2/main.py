@@ -1,5 +1,9 @@
 # Must run 'python.exe -m Pyro5.nameserver' command before run server
 
+import json
+from multiprocessing import cpu_count
+import queue
+import threading
 import time
 import Pyro5.api
 from itertools import product
@@ -25,47 +29,102 @@ def read_images(transform):
     return train_data, validation_data, test_data
 
 @Pyro5.api.expose
-class AITrainer:
+class AI_Trainer2:
     def __init__(self, train_data, validation_data, test_data):
         self.train_data = train_data
         self.validation_data = validation_data
         self.test_data = test_data
+        self.task_queue = queue.Queue()
+
+    def get_cpu_count(self):
+        """
+        Retorna o número de CPUs disponíveis no nó.
+        """
+        return cpu_count()
+
+    def add_tasks(self, tasks):
+        """
+        Adiciona uma lista de tarefas à fila do nó.
+        """
+        for task in tasks:
+            self.task_queue.put(task)
+
+    def worker(self):
+        """
+        Worker que processa tarefas da fila.
+        """
+        while not self.task_queue.empty():
+            try:
+                # Obtem uma tarefa da fila
+                model_name, num_epochs, learning_rate, weight_decay, replications = self.task_queue.get(timeout=1)
+                print(f"Nó processando: {model_name}")
+
+                # Processa a tarefa usando a função train
+                resultados = self.train(model_name, num_epochs, learning_rate, weight_decay, replications)
+                print(f"Resultados processados: {resultados}")
+
+            except queue.Empty:
+                break
+            finally:
+                self.task_queue.task_done()
+
+    def start_processing(self):
+        """
+        Inicializa threads para processar as tarefas.
+        """
+        num_threads = min(8, self.task_queue.qsize())  # Define no máximo 8 threads
+        threads = []
+        for _ in range(num_threads):
+            thread = threading.Thread(target=self.worker)
+            thread.start()
+            threads.append(thread)
+
+        for thread in threads:
+            thread.join()  # Aguarda as threads finalizarem
 
     def train(self, model_name, num_epochs, learning_rate, weight_decay, replications):
+        """
+        Função de treinamento.
+        """
         cnn = CNN(self.train_data, self.validation_data, self.test_data, 8)
-        start_time = time.time()
-        
-        acc_avg, best_replication = cnn.create_and_train_cnn(model_name, num_epochs, learning_rate, weight_decay, replications)
+        inicio = time.time()
 
-        duration = time.time() - start_time
-        return {
-            "model": model_name,
-            "epochs": num_epochs,
-            "learning_rate": learning_rate,
-            "weight_decay": weight_decay,
-            "accuracy": acc_avg,
-            "best_replication": best_replication,
-            "time_seconds": duration
+        acc_media, rep_max = cnn.create_and_train_cnn(model_name, num_epochs, learning_rate, weight_decay, replications)
+
+        fim = time.time()
+        duracao = fim - inicio
+
+        resultados = {
+            "Parametro de modelo": model_name,
+            "Parametro de quantidade de epocas": num_epochs,
+            "Parametro de Learning Rate": learning_rate,
+            "Parametro de Weight Decay": weight_decay,
+            "Acuracia Media": acc_media,
+            "Melhor replicacao": rep_max,
+            "Tempo": duracao,
+            "Unidade de Tempo": "segundos"
         }
 
+        return json.dumps(resultados, indent=4)
+
 if __name__ == '__main__':
-    print("Starting AITrainer RMI Server...")
+    print("Starting AITrainer2 RMI Server...")
 
     # Configuração inicial
     transform = define_transforms(224, 224)
     train_data, validation_data, test_data = read_images(transform)
 
     # Instância do objeto remoto
-    trainer_instance = AITrainer(train_data, validation_data, test_data)
+    ai_trainer2_instance = AI_Trainer2(train_data, validation_data, test_data)
 
     # Configuração do servidor Pyro5
     daemon = Pyro5.server.Daemon()
     print("\tConnecting to Name Server...")
     ns = Pyro5.api.locate_ns()
 
-    print("\tRegistering AITrainer object...")
-    uri = daemon.register(trainer_instance)
-    ns.register("example.ai_trainer", uri)
+    print("\tRegistering AITrainer2 object...")
+    uri = daemon.register(ai_trainer2_instance)
+    ns.register("node.ai_trainer2", uri)
 
     print("\tServer ready. Waiting for calls...")
     daemon.requestLoop()

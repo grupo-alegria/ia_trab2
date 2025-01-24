@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
     elif escolha == "3":
         # Acesse o objeto remoto via Proxy usando um gerenciador de contexto
-        with Pyro5.api.Proxy("PYRONAME:example.ai_trainer") as ai_trainer:
+        with Pyro5.api.Proxy("PYRONAME:node.ai_trainer") as ai_trainer:
             try:
                 # Chama o método train remotamente
                 resultados = ai_trainer.train("alexnet", 1, 0.001, 1, 2)
@@ -154,19 +154,55 @@ if __name__ == '__main__':
                 print("Resultados do treinamento:", resultados)
             except Exception as e:
                 print("Erro durante a comunicação com o servidor:", e)
-    
-    elif escolha == "4" :      
-        print("Sistema Distribuído e Multiprocesso Escolhido.")
 
-        with Pyro5.api.Proxy("PYRONAME:example.ai_trainer") as ai_trainer:
-            # Instancia o cliente
-            client = Client.Client()
-            try:
-                # Inicia o pool de threads no servidor com o cliente
-                ai_trainer.initPool(Pyro5.api.Proxy(client))
-            except Exception as e:
-                print(f"Erro durante a execução do sistema distribuído: {e}")
+    elif escolha == "4":
+        print('Sistema Distribuído e Multiprocesso.');
+
+        # Configurações para treinamento do modelo
+        replicacoes = 2
+        model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        epochs = [1]
+        learning_rates = [0.001, 0.0001, 0.00001]
+        weight_decays = [0, 0.0001]
+
+        parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
+        tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes)
+                for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+
+        # Conectando aos dois nós
+        with Pyro5.api.Proxy("PYRONAME:node.ai_trainer1") as trainer1, Pyro5.api.Proxy("PYRONAME:node.ai_trainer2") as trainer2:
+            # Obtendo o número de CPUs de cada nó
+            cpu1 = trainer1.get_cpu_count()
+            cpu2 = trainer2.get_cpu_count()
+
+            # Calculando a proporção de tarefas
+            total_cpus = cpu1 + cpu2
+            tasks1 = tasks[: int(len(tasks) * (cpu1 / total_cpus))]
+            tasks2 = tasks[int(len(tasks) * (cpu1 / total_cpus)):]
+
+            # Adicionando tarefas aos nós
+            trainer1.add_tasks(tasks1)
+            trainer2.add_tasks(tasks2)
+
+            # Iniciando o processamento
+            trainer1.start_processing()
+            trainer2.start_processing()
+
+            #Retonar para o cliente o resultado
+            
+    
+    # elif escolha == "4" :      
+    #     print("Sistema Distribuído e Multiprocesso Escolhido.")
+
+    #     with Pyro5.api.Proxy("PYRONAME:node.ai_trainer") as ai_trainer:
+    #         # Instancia o cliente
+    #         client = Client.Client()
+    #         try:
+    #             # Inicia o pool de threads no servidor com o cliente
+    #             ai_trainer.initPool(Pyro5.api.Proxy(client))
+    #         except Exception as e:
+    #             print(f"Erro durante a execução do sistema distribuído: {e}")
    
-        fim_total = time.time()
-        print(f"Tempo total de execução do programa: {fim_total - inicio_total:.2f} segundos")
+    #     fim_total = time.time()
+    #     print(f"Tempo total de execução do programa: {fim_total - inicio_total:.2f} segundos")
         

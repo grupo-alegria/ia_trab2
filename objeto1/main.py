@@ -1,5 +1,7 @@
 # Must run 'python.exe -m Pyro5.nameserver' command before run server
 
+import queue
+import threading
 from cnn import CNN  # Importa a classe CNN de um arquivo ou módulo 'cnn'
 import torch  # Importa o PyTorch, que é utilizado para criar redes neurais e treinar modelos
 from torchvision import datasets  # Importa os datasets da biblioteca torchvision
@@ -49,59 +51,70 @@ def train_model_parallel(args):
     return model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao
 
 @Pyro5.api.expose
-class AI_trainer(object):
-
+class AI_Trainer1:
     def __init__(self, train_data, validation_data, test_data):
         self.train_data = train_data
         self.validation_data = validation_data
         self.test_data = test_data
-        
-    def process_tasks(self, client_proxy):
+        self.task_queue = queue.Queue()
+
+    def get_cpu_count(self):
         """
-        Processa as tarefas enviadas pelo cliente.
-        Cada thread solicita um conjunto de parâmetros do cliente, executa o treinamento e retorna os resultados.
+        Retorna o número de CPUs disponíveis no nó.
         """
-        while True:
+        return cpu_count()
+
+    def add_tasks(self, tasks):
+        """
+        Adiciona uma lista de tarefas à fila do nó.
+        """
+        for task in tasks:
+            self.task_queue.put(task)
+
+    def worker(self):
+        """
+        Worker que processa tarefas da fila.
+        """
+        while not self.task_queue.empty():
             try:
-                # Solicita parâmetros do cliente
-                params = client_proxy.request_params()
-                if not params:  # Finaliza se o cliente não tiver mais tarefas
-                    break
+                # Obtem uma tarefa da fila
+                model_name, num_epochs, learning_rate, weight_decay, replications = self.task_queue.get(timeout=1)
+                print(f"Nó processando: {model_name}")
 
-                print(f"Thread processando parâmetros: {params}")
+                # Processa a tarefa usando a função train
+                resultados = self.train(model_name, num_epochs, learning_rate, weight_decay, replications)
+                print(f"Resultados processados: {resultados}")
 
-                # Processa os parâmetros de treinamento
-                model_name, num_epochs, learning_rate, weight_decay = params
-                resultados = self.train(model_name, num_epochs, learning_rate, weight_decay, 2)
-
-                # Retorna os resultados ao cliente
-                client_proxy.receive_results(resultados)
-
-            except Exception as e:
-                print(f"Erro ao processar tarefa: {e}")
+            except queue.Empty:
                 break
-            
-    @Pyro5.api.expose            
-    def initPool(self, client_uri):
-        """
-        Inicializa o pool de threads para processar tarefas do cliente.
-        """
-        client_proxy = Pyro5.api.Proxy(client_uri)
-        num_nucleos = cpu_count()
-        print(f"Inicializando pool de threads com {num_nucleos} núcleos...")
+            finally:
+                self.task_queue.task_done()
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=num_nucleos) as executor:
-            futures = [executor.submit(self.process_tasks, client_proxy) for _ in range(num_nucleos)]
-            concurrent.futures.wait(futures)
+    def start_processing(self):
+        """
+        Inicializa threads para processar as tarefas.
+        """
+        num_threads = min(8, self.task_queue.qsize())  # Define no máximo 8 threads
+        threads = []
+        for _ in range(num_threads):
+            thread = threading.Thread(target=self.worker)
+            thread.start()
+            threads.append(thread)
+
+        for thread in threads:
+            thread.join()  # Aguarda as threads finalizarem
 
     def train(self, model_name, num_epochs, learning_rate, weight_decay, replications):
-        cnn = CNN(self.train_data, self.validation_data, self.test_data, 8)  # Instancia o modelo CNN
-        inicio = time.time()  # Marca o início do tempo de treinamento
+        """
+        Função de treinamento.
+        """
+        cnn = CNN(self.train_data, self.validation_data, self.test_data, 8)
+        inicio = time.time()
 
         acc_media, rep_max = cnn.create_and_train_cnn(model_name, num_epochs, learning_rate, weight_decay, replications)
 
-        fim = time.time()  # Marca o final do tempo de treinamento
-        duracao = fim - inicio  # Calcula a duração do treinamento
+        fim = time.time()
+        duracao = fim - inicio
 
         resultados = {
             "Parametro de modelo": model_name,
@@ -114,33 +127,29 @@ class AI_trainer(object):
             "Unidade de Tempo": "segundos"
         }
 
-        # Adiciona o dicionário para a estrutura JSON
-        print(json.dumps(resultados, indent=4))
-        resultadosJson = json.dumps(resultados, indent=4)
-
-        return resultadosJson
+        return json.dumps(resultados, indent=4)
 
 
 if __name__ == '__main__':
-    print("Running AI_trainer RMI Server...")
+    print("Running AITrainer1 RMI Server...")
 
-    # Defina as transformações e os dados aqui, ou passe como argumento para a classe AI_trainer
+    # Defina as transformações e os dados aqui, ou passe como argumento para a classe AITrainer1
     data_transforms = define_transforms(224, 224)
     train_data, validation_data, test_data = read_images(data_transforms)
 
     # Crie a instância do servidor com os dados de treinamento, validação e teste
-    ai_trainer_instance = AI_trainer(train_data, validation_data, test_data)
+    ai_trainer1_instance = AI_Trainer1(train_data, validation_data, test_data)
 
     # Inicie o servidor Pyro5
     daemon = Pyro5.server.Daemon()
     print("\tFinding the Name Server...")
     ns = Pyro5.api.locate_ns()
 
-    print("\tCreating AI_trainer object URI...")
-    uri = daemon.register(ai_trainer_instance)
+    print("\tCreating AITrainer1 object URI...")
+    uri = daemon.register(ai_trainer1_instance)
 
-    print("\tRegistering AI_trainer object at Name Server...")
-    ns.register("example.ai_trainer", uri)
+    print("\tRegistering AITrainer1 object at Name Server...")
+    ns.register("node.ai_trainer1", uri)
 
     print("\tWaiting method calls...")
     daemon.requestLoop()
