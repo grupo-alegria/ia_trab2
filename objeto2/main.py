@@ -67,7 +67,7 @@ class AI_Trainer2:
                 break
             finally:
                 self.task_queue.task_done()
-
+    @Pyro5.api.oneway
     def start_processing(self):
         """
         Inicializa threads para processar as tarefas.

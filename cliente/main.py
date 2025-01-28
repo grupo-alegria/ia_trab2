@@ -9,6 +9,7 @@ from multiprocessing import Pool, cpu_count
 import json
 import Pyro5.api
 import Client
+import concurrent.futures
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
 def define_transforms(height, width):
@@ -160,7 +161,8 @@ if __name__ == '__main__':
 
         # Configurações para treinamento do modelo
         replicacoes = 2
-        model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        #model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        model_names = ['alexnet', 'mobilenet_v3_large']
         epochs = [1]
         learning_rates = [0.001, 0.0001, 0.00001]
         weight_decays = [0, 0.0001]
@@ -184,11 +186,16 @@ if __name__ == '__main__':
             trainer1.add_tasks(tasks1)
             trainer2.add_tasks(tasks2)
 
-            # Iniciando o processamento
-            trainer1.start_processing()
-            trainer2.start_processing()
-
-            #Retonar para o cliente o resultado
+            
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [
+                    executor.submit(trainer1.start_processing()),
+                    executor.submit(trainer2.start_processing()),
+                ]
+                print('aguardando finalizar')
+                # Aguarda ambas as tarefas terminarem
+                for future in concurrent.futures.as_completed(futures):
+                    print("Tarefa finalizada:", future.result())
             
     
     # elif escolha == "4" :      
