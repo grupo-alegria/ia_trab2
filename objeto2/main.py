@@ -35,6 +35,8 @@ class AI_Trainer2:
         self.validation_data = validation_data
         self.test_data = test_data
         self.task_queue = queue.Queue()
+        self.resultadosTotais = []  # Lista compartilhada para resultados
+        self.lock = threading.Lock()  # Lock para acesso seguro
 
     def get_cpu_count(self):
         """
@@ -60,19 +62,24 @@ class AI_Trainer2:
                 print(f"Nó processando: {model_name}")
 
                 # Processa a tarefa usando a função train
-                resultados = self.train(model_name, num_epochs, learning_rate, weight_decay, replications)
-                print(f"Resultados processados: {resultados}")
+                resultado = self.train(model_name, num_epochs, learning_rate, weight_decay, replications)
+                print(f"Tarefa concluída: {resultado}")
+
+                # Adiciona o resultado à lista compartilhada com Lock
+                with self.lock:
+                    self.resultadosTotais.append(resultado)
 
             except queue.Empty:
                 break
             finally:
                 self.task_queue.task_done()
+
     @Pyro5.api.oneway
     def start_processing(self):
         """
         Inicializa threads para processar as tarefas.
         """
-        num_threads = min(8, self.task_queue.qsize())  # Define no máximo 8 threads
+        num_threads = min(cpu_count(), self.task_queue.qsize())
         threads = []
         for _ in range(num_threads):
             thread = threading.Thread(target=self.worker)
@@ -81,6 +88,9 @@ class AI_Trainer2:
 
         for thread in threads:
             thread.join()  # Aguarda as threads finalizarem
+
+        # Retorna todos os resultados processados
+        return self.resultadosTotais
 
     def train(self, model_name, num_epochs, learning_rate, weight_decay, replications):
         """
