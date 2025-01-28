@@ -26,7 +26,7 @@ class CNN:
         acc_max = 0  # Inicializa a variável para armazenar a melhor acurácia obtida.
         
         for i in range(0, replicacoes):  # Loop para executar a replicação do treinamento.
-            print(f"Replicação {i + 1} de {replicacoes} iniciada.")
+            print(f"Replicação {i + 1} de {replicacoes} de {model_name}, sob {num_epochs}, {learning_rate}, {weight_decay} iniciada.")
             model = self.create_model(model_name)  # Cria o modelo de rede neural com base no nome especificado.
             optimizerSGD = self.create_optimizer(model, learning_rate, weight_decay)  # Cria o otimizador SGD com a taxa de aprendizado e o peso de decaimento fornecidos.
             criterionCEL = self.create_criterion()  # Cria a função de perda (CrossEntropyLoss).
