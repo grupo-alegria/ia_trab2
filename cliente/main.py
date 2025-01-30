@@ -68,8 +68,9 @@ if __name__ == '__main__':
         cnn = CNN(train_data, validation_data, test_data, 8)
         
         # Configurações para treinamento do modelo
-        replicacoes = 2  # Número de repetições para treinar o modelo
-        model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        replicacoes = 10  # Número de repetições para treinar o modelo
+        #model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        model_names = ['vgg11', 'vgg19', 'mobilenet_v3_large']
         epochs = [1]  # Número de épocas para treinamento
         learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
         weight_decays = [0, 0.0001]  # Decaimento de peso
@@ -77,6 +78,8 @@ if __name__ == '__main__':
         # Gera todas as combinações possíveis de parâmetros
         parameter_combinations = product(model_names, epochs, learning_rates, weight_decays)
 
+        #Define a String responsável por registrar os logs dos treinamentos
+        treinametos_str = ""
         # Itera sobre cada combinação de parâmetros
         for model_name, num_epochs, learning_rate, weight_decay in parameter_combinations:
             inicio = time.time()  # Marca o início do tempo de treinamento
@@ -88,16 +91,27 @@ if __name__ == '__main__':
             duracao = fim - inicio  # Calcula a duração do treinamento
 
             # Exibe os resultados do treinamento
-            print(f"Parâmetro de modelo: {model_name}")
-            print(f"Parâmetro de quantidade de épocas: {num_epochs}")
-            print(f"Parâmetro de Learning Rate: {learning_rate}")
-            print(f"Parâmetro de Weight Decay: {weight_decay}")
-            print(f"Acurácia Média: {acc_media}")
-            print(f"Melhor replicação: {rep_max}")
-            print(f"Tempo: {duracao:.2f} segundos\n")
-            print("-----------------------------------")
+            
+            resultado = ( 
+                
+                f"Modelo: {model_name}\n"
+                f"Épocas: {num_epochs}\n"
+                f"Learning Rate: {learning_rate}\n"
+                f"Weight Decay: {weight_decay}\n"
+                f"Acurácia Média: {acc_media}\n"
+                f"Melhor replicação: {rep_max}\n"
+                f"Tempo: {duracao:.2f} segundos\n"
+                "---------------------------------\n"
+            )
+            treinametos_str = treinametos_str+resultado
+            
         fim_sistema = time.time()
-        print(f"Tempo total para o sistema Centralizado Único Processo: {fim_sistema - inicio_sistema:.2f} segundos\n")
+        treinametos_str = treinametos_str+f"Tempo total para o sistema Centralizado Único Processo: {fim_sistema - inicio_sistema:.2f} segundos\n"
+        print(treinametos_str)
+    
+        
+        with open("centralizado_unico_processo.txt", "w") as arquivo:
+            arquivo.write(treinametos_str)
     
     elif escolha == "2":
         inicio_sistema = time.time()  # Início do sistema centralizado multiprocesso
@@ -112,8 +126,9 @@ if __name__ == '__main__':
         train_data, validation_data, test_data = read_images(data_transforms)
 
         # Configurações para treinamento do modelo
-        replicacoes = 2
-        model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        replicacoes = 10
+        #model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+        model_names = ['vgg11', 'vgg19', 'mobilenet_v3_large']
         epochs = [1]
         learning_rates = [0.001, 0.0001, 0.00001]
         weight_decays = [0, 0.0001]
@@ -125,18 +140,27 @@ if __name__ == '__main__':
         # Multiprocessamento
         with Pool(processes=num_nucleos) as pool:
             results = pool.map(train_model_parallel, args)
-
+        treinametos_str=""
         for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
-            print(f"Parâmetro de modelo: {model_name}")
-            print(f"Parâmetro de quantidade de épocas: {num_epochs}")
-            print(f"Parâmetro de Learning Rate: {learning_rate}")
-            print(f"Parâmetro de Weight Decay: {weight_decay}")
-            print(f"Acurácia Média: {acc_media}")
-            print(f"Melhor replicação: {rep_max}")
-            print(f"Tempo: {duracao:.2f} segundos\n")
-            print("-----------------------------------")
+            resultado = ( 
+                
+                f"Modelo: {model_name}\n"
+                f"Épocas: {num_epochs}\n"
+                f"Learning Rate: {learning_rate}\n"
+                f"Weight Decay: {weight_decay}\n"
+                f"Acurácia Média: {acc_media}\n"
+                f"Melhor replicação: {rep_max}\n"
+                f"Tempo: {duracao:.2f} segundos\n"
+                "---------------------------------\n"
+            )
+            treinametos_str = treinametos_str+resultado
+        print(treinametos_str)
         fim_sistema = time.time()
-        print(f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos\n")
+        treinametos_str = treinametos_str+f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
+        
+        with open("centralizado_multiplos_processos.txt", "w") as arquivo:
+            arquivo.write(treinametos_str)
+        print(treinametos_str)
 
     elif escolha == "3":
         # Acesse o objeto remoto via Proxy usando um gerenciador de contexto
