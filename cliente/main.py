@@ -4,8 +4,7 @@ from torchvision import datasets  # Importa os datasets da biblioteca torchvisio
 from torchvision.transforms import v2  # Importa as transformações de imagens da torchvision
 import time
 from itertools import product
-import os
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, Manager
 import json
 import Pyro5.api
 import Client
@@ -103,13 +102,14 @@ if __name__ == '__main__':
         print("Sistema Centralizado em Multiprocesso Escolhido.")
 
         # Obter número de núcleos disponíveis
-        num_nucleos = cpu_count()
+        #num_nucleos = cpu_count()
+        num_nucleos = max(1, cpu_count() // 2)
         print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
 
         # Define as dimensões das imagens (224x224) e aplica as transformações
         data_transforms = define_transforms(224, 224)
         train_data, validation_data, test_data = read_images(data_transforms)
-
+    
         # Configurações para treinamento do modelo
         replicacoes = 2
         model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
@@ -121,9 +121,20 @@ if __name__ == '__main__':
         args = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, train_data, validation_data, test_data)
                 for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
 
-        # Multiprocessamento
-        with Pool(processes=num_nucleos) as pool:
-            results = pool.map(train_model_parallel, args)
+        # Gerenciador para compartilhamento de dados entre processos
+        with Manager() as manager:
+            shared_train_data = manager.list(train_data)
+            shared_validation_data = manager.list(validation_data)
+            shared_test_data = manager.list(test_data)
+
+            args = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
+                    shared_train_data, shared_validation_data, shared_test_data)
+                    for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+
+            # Multiprocessamento usando memória compartilhada
+            with Pool(processes=num_nucleos) as pool:
+                results = pool.map(train_model_parallel, args)
+
 
         for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
             print(f"Parâmetro de modelo: {model_name}")
