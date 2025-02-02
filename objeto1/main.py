@@ -128,16 +128,23 @@ class AI_Trainer1:
         fim = time.time()
         duracao = fim - inicio
 
-        resultados = {
-            "Parametro de modelo": model_name,
-            "Parametro de quantidade de epocas": num_epochs,
-            "Parametro de Learning Rate": learning_rate,
-            "Parametro de Weight Decay": weight_decay,
-            "Acuracia Media": acc_media,
-            "Melhor replicacao": rep_max,
-            "Tempo": duracao,
-            "Unidade de Tempo": "segundos"
-        }
+        # Criando a string do resultado
+        resultados = ( 
+            f"Modelo: {model_name}\n"
+            f"Épocas: {num_epochs}\n"
+            f"Learning Rate: {learning_rate}\n"
+            f"Weight Decay: {weight_decay}\n"
+            f"Acurácia Média: {acc_media}\n"
+            f"Melhor replicação: {rep_max}\n"
+            f"Tempo: {duracao:.2f} segundos\n"
+            "---------------------------------\n"
+        )
+
+
+        # Abrindo o arquivo em modo 'a' para adicionar novos resultados sem sobrescrever os antigos
+        with open("distribuido_obj_01.txt", "a") as arquivo:
+            arquivo.write(resultados)
+            arquivo.write(f"Tempo total para o Sistema Distribuído: {duracao:.2f} segundos\n\n")
 
         return json.dumps(resultados, indent=4)
 

@@ -129,7 +129,7 @@ if __name__ == '__main__':
         parameter_combinations = product(model_names, epochs, learning_rates, weight_decays)
 
         #Define a String responsável por registrar os logs dos treinamentos
-        treinametos_str = ""
+        treinamentos_str = ""
         # Itera sobre cada combinação de parâmetros
         for model_name, num_epochs, learning_rate, weight_decay in parameter_combinations:
             inicio = time.time()  # Marca o início do tempo de treinamento
@@ -153,15 +153,15 @@ if __name__ == '__main__':
                 f"Tempo: {duracao:.2f} segundos\n"
                 "---------------------------------\n"
             )
-            treinametos_str = treinametos_str+resultado
+            treinamentos_str = treinamentos_str+resultado
             
         fim_sistema = time.time()
-        treinametos_str = treinametos_str+f"Tempo total para o sistema Centralizado Único Processo: {fim_sistema - inicio_sistema:.2f} segundos\n"
-        print(treinametos_str)
+        treinamentos_str = treinamentos_str+f"Tempo total para o sistema Centralizado Único Processo: {fim_sistema - inicio_sistema:.2f} segundos\n"
+        print(treinamentos_str)
     
         
         with open("centralizado_unico_processo.txt", "w") as arquivo:
-            arquivo.write(treinametos_str)
+            arquivo.write(treinamentos_str)
     
     elif escolha == "2":
         inicio_sistema = time.time()  # Início do sistema centralizado multiprocesso
@@ -201,7 +201,7 @@ if __name__ == '__main__':
             # Multiprocessamento usando memória compartilhada
             with Pool(processes=num_nucleos) as pool:
                 results = pool.map(train_model_parallel, args)
-            treinametos_str=""
+            treinamentos_str=""
 
 
         for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
@@ -216,14 +216,14 @@ if __name__ == '__main__':
                 f"Tempo: {duracao:.2f} segundos\n"
                 "---------------------------------\n"
             )
-            treinametos_str = treinametos_str+resultado
-        print(treinametos_str)
+            treinamentos_str = treinamentos_str+resultado
+        print(treinamentos_str)
         fim_sistema = time.time()
-        treinametos_str = treinametos_str+f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
+        treinamentos_str = treinamentos_str+f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
         
         with open("centralizado_multiplos_processos.txt", "w") as arquivo:
-            arquivo.write(treinametos_str)
-        print(treinametos_str)
+            arquivo.write(treinamentos_str)
+        print(treinamentos_str)
 
     elif escolha == "3":
         # Acesse o objeto remoto via Proxy usando um gerenciador de contexto

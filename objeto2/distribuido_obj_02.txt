@@ -1,0 +1,48 @@
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0.0001
+Acurácia Média: 0.5227272727272727
+Melhor replicação: 0
+Tempo: 10.84 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0
+Acurácia Média: 0.45454545454545453
+Melhor replicação: 0
+Tempo: 11.95 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0
+Acurácia Média: 0.38636363636363635
+Melhor replicação: 1
+Tempo: 11.99 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0.0001
+Acurácia Média: 0.4318181818181818
+Melhor replicação: 0
+Tempo: 12.28 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 1e-05
+Weight Decay: 0
+Acurácia Média: 0.5227272727272727
+Melhor replicação: 1
+Tempo: 12.33 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 1e-05
+Weight Decay: 0.0001
+Acurácia Média: 0.6363636363636364
+Melhor replicação: 0
+Tempo: 12.34 segundos
+---------------------------------
