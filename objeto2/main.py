@@ -115,10 +115,11 @@ class AI_Trainer2:
             f"Tempo: {duracao:.2f} segundos\n"
             "---------------------------------\n"
         )
-
-        # Abrindo o arquivo em modo 'a' para adicionar novos resultados sem sobrescrever os antigos
-        with open("distribuido_obj_02.txt", "a") as arquivo:
-            arquivo.write(resultados)
+        # Usando um lock para garantir escrita segura
+        with self.lock:
+            # Abrindo o arquivo em modo 'a' para adicionar novos resultados sem sobrescrever os antigos
+            with open("distribuido_obj_02.txt", "a") as arquivo:
+                arquivo.write(resultados)
 
         return json.dumps(resultados, indent=4)
 
@@ -133,9 +134,9 @@ if __name__ == '__main__':
     ai_trainer2_instance = AI_Trainer2(train_data, validation_data, test_data)
 
     # Configuração do servidor Pyro5
-    daemon = Pyro5.server.Daemon()
+    daemon = Pyro5.server.Daemon(host="192.168.1.100")
     print("\tConnecting to Name Server...")
-    ns = Pyro5.api.locate_ns()
+    ns = Pyro5.api.locate_ns(host="10.151.57.35",port=9090)
 
     print("\tRegistering AITrainer2 object...")
     uri = daemon.register(ai_trainer2_instance)
