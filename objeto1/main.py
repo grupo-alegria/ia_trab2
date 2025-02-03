@@ -1,4 +1,4 @@
-# Must run 'python.exe -m Pyro5.nameserver' command before run server
+# Must run 'python.exe -m Pyro5.nameserver --host 0.0.0.0' command before run server
 
 import queue
 import threading
@@ -160,7 +160,7 @@ if __name__ == '__main__':
     ai_trainer1_instance = AI_Trainer1(train_data, validation_data, test_data)
 
     # Inicie o servidor Pyro5
-    daemon = Pyro5.server.Daemon(host="192.168.1.100")
+    daemon = Pyro5.server.Daemon()
     print("\tFinding the Name Server...")
     ns = Pyro5.api.locate_ns(host="10.151.57.35",port=9090)
 

@@ -226,24 +226,6 @@ if __name__ == '__main__':
         print(treinamentos_str)
 
     elif escolha == "3":
-        # Acesse o objeto remoto via Proxy usando um gerenciador de contexto
-        with Pyro5.api.Proxy("PYRONAME:node.ai_trainer") as ai_trainer:
-            try:
-                # Chama o método train remotamente
-                resultados = ai_trainer.train("alexnet", 1, 0.001, 1, 2)
-
-                # Exibe os resultados recebidos
-                print("Resultados do treinamento:", resultados)
-                
-                # Chama o método train remotamente
-                resultados = ai_trainer.train("mobilenet_v3_small", 1, 0.001, 1, 2)
-
-                # Exibe os resultados recebidos
-                print("Resultados do treinamento:", resultados)
-            except Exception as e:
-                print("Erro durante a comunicação com o servidor:", e)
-
-    elif escolha == "4":
         print('Sistema Distribuído e Multiprocesso.');
 
         # Conectando aos dois nós
