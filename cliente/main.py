@@ -69,8 +69,19 @@ async def mainDistributed():
     tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes)
             for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
 
-    # Conectando aos dois nós
-    with Pyro5.api.Proxy("PYRONAME:node.ai_trainer1") as trainer1, Pyro5.api.Proxy("PYRONAME:node.ai_trainer2") as trainer2:
+    # IP do NameServer - Substitua pelo IP correto da máquina onde o NameServer está rodando
+    NAMESERVER_IP = "192.168.3.34"  # Exemplo, ajuste conforme necessário
+
+    # Localiza o NameServer no IP especificado
+    ns = Pyro5.api.locate_ns(host=NAMESERVER_IP)
+
+    # Obtém as URIs dos nós de treino
+    uri_trainer1 = ns.lookup("node.ai_trainer1")
+    uri_trainer2 = ns.lookup("node.ai_trainer2")
+
+    # Conecta aos nós usando as URIs obtidas
+    with Pyro5.api.Proxy(uri_trainer1) as trainer1, Pyro5.api.Proxy(uri_trainer2) as trainer2:
+
         # Obtendo o número de CPUs de cada nó (se necessário)
         cpu1 = trainer1.get_cpu_count()  # Chamada síncrona
         cpu2 = trainer2.get_cpu_count()  # Chamada síncrona
