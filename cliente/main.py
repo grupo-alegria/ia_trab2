@@ -6,10 +6,7 @@ from torchvision.transforms import v2  # Importa as transformações de imagens 
 import time
 from itertools import product
 from multiprocessing import Pool, cpu_count, Manager
-import json
 import Pyro5.api
-import Client
-import concurrent.futures
 
 # Define as transformações que serão aplicadas nas imagens de treino e teste
 def define_transforms(height, width):
