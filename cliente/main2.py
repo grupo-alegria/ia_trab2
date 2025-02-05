@@ -91,11 +91,23 @@ async def mainDistributed():
     
     #---------------calcula o numero de tarefas de cada máquina remota:
     total_cpus = nucleos_objeto_1 + nucleos_objeto_2
-    tasks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    # tasks1 = tasks[: int(len(tasks) * (nucleos_objeto_1 / total_cpus))]
-    # tasks2 = tasks[int(len(tasks) * (nucleos_objeto_2 / total_cpus)):]
+    
+    
+    
+    replicacoes = 10  # Número de repetições para treinar o modelo
+    model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+    epochs = [5, 10]  # Número de épocas para treinamento
+    learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
+    weight_decays = [0, 0.0001]  # Decaimento de peso
+
+
+    parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
+    tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes)
+            for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+
     tasks1 = int(len(tasks) * (nucleos_objeto_1 / total_cpus))
     tasks2 = len(tasks)-tasks1
+    print("tasks: ", len(tasks))
     print("tasks1: ",tasks1)
     print("tasks2: ",tasks2)
     
