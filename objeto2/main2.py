@@ -25,7 +25,6 @@ def respond_client(message):
     
     response_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     response_sock.sendto(response_str.encode(), (MULTICAST_GROUP, PORT))
-    print("sendei")
 
 if __name__ == '__main__':
     # Criar socket UDP
@@ -44,17 +43,21 @@ if __name__ == '__main__':
         sender = mensagem.get("sender", "Chave 'sender' não encontrada")  # Obtém o valor da chave "sender"
         receiver = mensagem.get("receiver", "Chave 'receiver' não encontrada")  # Obtém o valor da chave "sender"
         action = mensagem.get("action", "Chave 'action' não encontrada")  # Obtém o valor da chave "sender"
-        print(f"Mensagem JSON recebida de {addr}: {mensagem}")
-        print(f"Sender: {sender}")
+        # print(f"Mensagem JSON recebida de {addr}: {mensagem}")
+        # print(f"Sender: {sender}")
 
         if sender == "client" : 
             
             if receiver == "objeto2":
 
                 if action == "get_cpu_count":
-                    print('tamo indo')
+                    print('Obtendo o número de CPUs')
                     numnucleos = get_cpu_count()
                     print(numnucleos," nucleos.")
                     respond_client(2)
                     # respond_client(numnucleos)
-                    break
+                
+                elif action == "start_process":
+                    print('Processamento iniciado')
+                    print(mensagem)
+                    

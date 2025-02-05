@@ -111,6 +111,42 @@ async def mainDistributed():
     print("tasks1: ",tasks1)
     print("tasks2: ",tasks2)
     
+    messageObj1 = {
+        "replicacoes": replicacoes,
+        "model_names": model_names,
+        "epochs": epochs,
+        "learning_rates": learning_rates,
+        "weight_decays": weight_decays,
+        "tasks" : tasks1,
+        "sender": NAME,
+        "receiver": "objeto1",
+        "action": "start_process"
+    }
+    
+    print(messageObj1)
+
+    # Convertendo para JSON
+    json_message_obj1 = json.dumps(messageObj1, indent=4)
+    send_multicast_message(json_message_obj1)
+    
+    messageObj2 = {
+        "replicacoes": replicacoes,
+        "model_names": model_names,
+        "epochs": epochs,
+        "learning_rates": learning_rates,
+        "weight_decays": weight_decays,
+        "tasks" : tasks2,
+        "sender": NAME,
+        "receiver": "objeto2",
+        "action": "start_process"
+    }
+    
+    print(messageObj2)
+
+    # Convertendo para JSON
+    json_message_obj2 = json.dumps(messageObj2, indent=4)
+    send_multicast_message(json_message_obj2)
+    
 
 if __name__ == '__main__':
     inicio_total = time.time()
