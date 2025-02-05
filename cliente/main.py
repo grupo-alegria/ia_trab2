@@ -86,7 +86,7 @@ async def mainDistributed():
         # Calculando a proporção de tarefas
         total_cpus = cpu1 + cpu2
         tasks1 = tasks[: int(len(tasks) * (cpu1 / total_cpus))]
-        tasks2 = tasks[int(len(tasks) * (cpu1 / total_cpus)):]
+        tasks2 = tasks[int(len(tasks) * (cpu2 / total_cpus)):]
 
         # Adicionando tarefas aos nós (chamadas síncronas)
         trainer1.add_tasks(tasks1)

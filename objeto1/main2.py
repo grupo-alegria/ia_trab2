@@ -16,7 +16,7 @@ def get_cpu_count():
 
 def respond_client(message):
     response = {
-    "sender": "objeto1",
+    "sender": NAME,
     "receiver": "client",
     "response": message
     }
@@ -48,10 +48,12 @@ if __name__ == '__main__':
         print(f"Sender: {sender}")
 
         if sender == "client" : 
+            
+            if receiver == "objeto1":
 
-            if action == "get_cpu_count":
-                print('tamo indo')
-                numnucleos = get_cpu_count()
-                print(numnucleos," nucleos.")
-                respond_client(numnucleos)
-                break
+                if action == "get_cpu_count":
+                    print('tamo indo')
+                    numnucleos = get_cpu_count()
+                    print(numnucleos," nucleos.")
+                    respond_client(numnucleos)
+                    break
