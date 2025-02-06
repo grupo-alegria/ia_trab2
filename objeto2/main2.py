@@ -76,7 +76,7 @@ if __name__ == '__main__':
     mreq = struct.pack("4sl", socket.inet_aton(MULTICAST_GROUP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
-    print("Objeto1 multicast aguardando mensagens...")
+    print(f"{NAME} multicast aguardando mensagens...")
     while True:
         data, addr = sock.recvfrom(1024)  # Recebe mensagens do grupo multicast
         mensagem = json.loads(data.decode())
@@ -170,5 +170,7 @@ if __name__ == '__main__':
                     print(treinamentos_str)
                     with open("centralizado_multiplos_processos.txt", "w") as arquivo:
                         arquivo.write(treinamentos_str)
+                        
+                    respond_client("processamento concluido!")
 
                     

@@ -4,14 +4,14 @@ Learning Rate: 1e-05
 Weight Decay: 0
 Acurácia Média: 0.5909090909090909
 Melhor replicação: 0
-Tempo: 10.52 segundos
+Tempo: 12.11 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 2
 Learning Rate: 1e-05
 Weight Decay: 0.0001
-Acurácia Média: 0.6363636363636364
+Acurácia Média: 0.4090909090909091
 Melhor replicação: 0
-Tempo: 10.52 segundos
+Tempo: 12.05 segundos
 ---------------------------------
-Tempo total para o sistema Centralizado Multiprocesso: 27.86 segundos
+Tempo total para o sistema Centralizado Multiprocesso: 24.78 segundos

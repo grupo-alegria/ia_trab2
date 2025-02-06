@@ -9,6 +9,7 @@ import time
 from itertools import product
 from multiprocessing import Pool, cpu_count, Manager
 import json
+import threading
 
 # Configuração do Multicast
 MULTICAST_GROUP = '224.1.1.1'
@@ -56,6 +57,37 @@ def listen_multicast():
     print(f"Recebido de {addr}: {data.decode()}")
     return data.decode()
 
+def listen_multicast_confirmation(message_list, done_event):
+    """
+    Escuta mensagens multicast (que são JSONs) e as adiciona à lista
+    se a key "receiver" for igual a "client".
+    Quando duas mensagens válidas forem recebidas, sinaliza o evento.
+    """
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind(('', PORT))
+    
+    # Adiciona o socket ao grupo multicast
+    mreq = struct.pack("4sl", socket.inet_aton(MULTICAST_GROUP), socket.INADDR_ANY)
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+    
+    while len(message_list) < 2:
+        data, addr = sock.recvfrom(1024)
+        try:
+            message_str = data.decode()
+            message_json = json.loads(message_str)
+            # Verifica se a mensagem possui a key "receiver" com o valor "client"
+            if message_json.get("receiver") == "client":
+                print(f"Recebido de {addr}: {message_str}")
+                message_list.append(message_json)
+            else:
+                print(f"Mensagem de {addr} ignorada: 'receiver' não é 'client'")
+        except Exception as e:
+            print(f"Erro ao processar mensagem de {addr}: {e}")
+    
+    # Sinaliza que já foram recebidas duas mensagens válidas
+    done_event.set()
+
 async def mainDistributed():
     #--------------solicita num cpus do objeto1
     message = {
@@ -69,11 +101,16 @@ async def mainDistributed():
     send_multicast_message(json_message)
     response = listen_multicast()
     response_json = json.loads(response)
-    nucleos_objeto_1 = response_json.get("response", "Chave 'response' não encontrada")  # Obtém o valor da chave "response"
-    print("Resposta do nó de treino:", response)
-    print("nucleos_objeto_1 : ",nucleos_objeto_1)
+    print("Resposta do objeto1:", response)
     
-    #---------------solicita num cpus do objeto1
+    receiver = response_json.get("receiver", "Chave 'receiver' não encontrada")  # Obtém o valor da chave "response"
+    sender = response_json.get("sender", "Chave 'sender' não encontrada")  # Obtém o valor da chave "sender"
+    if receiver == "client":
+        if sender == "objeto1":
+            nucleos_objeto_1 = response_json.get("response", "Chave 'response' não encontrada")  # Obtém o valor da chave "response"
+            print("nucleos_objeto_1 : ",nucleos_objeto_1)
+    
+    #---------------solicita num cpus do objeto2
     message = {
     "sender": NAME,
     "receiver": "objeto2",
@@ -85,9 +122,15 @@ async def mainDistributed():
     send_multicast_message(json_message)
     response = listen_multicast()
     response_json = json.loads(response)
-    nucleos_objeto_2 = response_json.get("response", "Chave 'response' não encontrada")  # Obtém o valor da chave "response"
     print("Resposta do objeto2:", response)
-    print("nucleos_objeto_2 : ",nucleos_objeto_2)
+    
+    receiver = response_json.get("receiver", "Chave 'receiver' não encontrada")  # Obtém o valor da chave "response"
+    sender = response_json.get("sender", "Chave 'sender' não encontrada")  # Obtém o valor da chave "sender"
+    if receiver == "client":
+        if sender == "objeto2":
+            nucleos_objeto_2 = response_json.get("response", "Chave 'response' não encontrada")  # Obtém o valor da chave "response"
+            print("nucleos_objeto_2 : ",nucleos_objeto_2)
+            
     
     #---------------calcula o numero de tarefas de cada máquina remota:
     total_cpus = nucleos_objeto_1 + nucleos_objeto_2
@@ -111,6 +154,17 @@ async def mainDistributed():
     print("tasks: ", len(tasks))
     print("tasks1: ",tasks1)
     print("tasks2: ",tasks2)
+    
+    ###
+    # Lista para armazenar as mensagens recebidas com o confirmação do processamento
+    messages = []
+    # Evento para sinalizar quando as duas mensagens forem recebidas
+    done = threading.Event()
+    
+    # Cria e inicia a thread que escuta as mensagens multicast
+    listener_thread = threading.Thread(target=listen_multicast_confirmation, args=(messages, done))
+    listener_thread.start()
+    ###
     
     messageObj1 = {
         "replicacoes": replicacoes,
@@ -147,6 +201,10 @@ async def mainDistributed():
     # Convertendo para JSON
     json_message_obj2 = json.dumps(messageObj2, indent=4)
     send_multicast_message(json_message_obj2)
+    
+    done.wait()
+    
+    print("Mensagens recebidas:", messages)
     
 
 if __name__ == '__main__':
