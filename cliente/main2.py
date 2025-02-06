@@ -94,9 +94,10 @@ async def mainDistributed():
     
     
     
-    replicacoes = 10  # Número de repetições para treinar o modelo
-    model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
-    epochs = [5, 10]  # Número de épocas para treinamento
+    replicacoes = 1  # Número de repetições para treinar o modelo
+    # model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+    model_names = ['alexnet', 'mobilenet_v3_large']
+    epochs = [2]  # Número de épocas para treinamento
     learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
     weight_decays = [0, 0.0001]  # Decaimento de peso
 
