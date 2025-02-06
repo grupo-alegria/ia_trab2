@@ -1,120 +1,75 @@
-Modelo: alexnet
+Melhor replicação do Objeto 1: 
+Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0.0001
-Acurácia Média: 0.5227272727272727
+Acurácia Média: 0.7272727272727273
 Melhor replicação: 0
-Tempo: 10.86 segundos
+Tempo: 2.90 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 10.86 segundos
 
-Modelo: alexnet
+==============================================Modelo: alexnet
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.40909090909090906
-Melhor replicação: 1
-Tempo: 12.01 segundos
+Acurácia Média: 0.4090909090909091
+Melhor replicação: 0
+Tempo: 5.71 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 12.01 segundos
-
 Modelo: alexnet
 Épocas: 1
-Learning Rate: 1e-05
-Weight Decay: 0
-Acurácia Média: 0.34090909090909094
-Melhor replicação: 1
-Tempo: 12.36 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.36 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 1e-05
+Learning Rate: 0.001
 Weight Decay: 0.0001
 Acurácia Média: 0.5909090909090909
-Melhor replicação: 1
-Tempo: 12.43 segundos
+Melhor replicação: 0
+Tempo: 5.68 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 12.43 segundos
-
+Modelo: alexnet
+Épocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0
+Acurácia Média: 0.4090909090909091
+Melhor replicação: 0
+Tempo: 5.47 segundos
+---------------------------------
 Modelo: alexnet
 Épocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0.0001
-Acurácia Média: 0.5227272727272727
-Melhor replicação: 0
-Tempo: 12.71 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.71 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 0.0001
-Weight Decay: 0
-Acurácia Média: 0.6363636363636364
-Melhor replicação: 1
-Tempo: 12.71 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.71 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 0.001
-Weight Decay: 0
 Acurácia Média: 0.36363636363636365
-Melhor replicação: 1
-Tempo: 10.96 segundos
+Melhor replicação: 0
+Tempo: 5.45 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 10.96 segundos
-
+Modelo: alexnet
+Épocas: 1
+Learning Rate: 1e-05
+Weight Decay: 0
+Acurácia Média: 0.3181818181818182
+Melhor replicação: 0
+Tempo: 2.81 segundos
+---------------------------------
 Modelo: alexnet
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0.0001
-Acurácia Média: 0.5909090909090908
-Melhor replicação: 1
-Tempo: 11.93 segundos
+Acurácia Média: 0.3181818181818182
+Melhor replicação: 0
+Tempo: 2.81 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 11.93 segundos
-
-Modelo: alexnet
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0
+Acurácia Média: 0.5
+Melhor replicação: 0
+Tempo: 2.91 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0.0001
-Acurácia Média: 0.5909090909090908
-Melhor replicação: 1
-Tempo: 12.01 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.01 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 0.0001
-Weight Decay: 0.0001
-Acurácia Média: 0.47727272727272724
+Acurácia Média: 0.7272727272727273
 Melhor replicação: 0
-Tempo: 12.32 segundos
+Tempo: 2.90 segundos
 ---------------------------------
-Tempo total para o Sistema Distribuído: 12.32 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 1e-05
-Weight Decay: 0
-Acurácia Média: 0.6818181818181819
-Melhor replicação: 0
-Tempo: 12.33 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.33 segundos
-
-Modelo: alexnet
-Épocas: 1
-Learning Rate: 0.0001
-Weight Decay: 0
-Acurácia Média: 0.6590909090909091
-Melhor replicação: 0
-Tempo: 12.36 segundos
----------------------------------
-Tempo total para o Sistema Distribuído: 12.36 segundos
-
+Tempo total para o sistema Centralizado Multiprocesso: 27.34 segundos

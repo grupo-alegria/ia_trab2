@@ -1,26 +1,36 @@
-Modelo: vgg11
+Melhor conjunto de parametros: 
+Modelo: vgg19
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.5
+Acurácia Média: 0.7272727272727273
 Melhor replicação: 0
-Tempo: 6.50 segundos
+Tempo: 3.29 segundos
+---------------------------------
+
+==============================================Modelo: vgg11
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0
+Acurácia Média: 0.5454545454545454
+Melhor replicação: 0
+Tempo: 3.18 segundos
 ---------------------------------
 Modelo: vgg11
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0.0001
-Acurácia Média: 0.36363636363636365
+Acurácia Média: 0.45454545454545453
 Melhor replicação: 0
-Tempo: 6.49 segundos
+Tempo: 3.19 segundos
 ---------------------------------
 Modelo: vgg11
 Épocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0
-Acurácia Média: 0.45454545454545453
+Acurácia Média: 0.5454545454545454
 Melhor replicação: 0
-Tempo: 6.43 segundos
+Tempo: 3.18 segundos
 ---------------------------------
 Modelo: vgg11
 Épocas: 1
@@ -28,39 +38,87 @@ Learning Rate: 0.0001
 Weight Decay: 0.0001
 Acurácia Média: 0.6363636363636364
 Melhor replicação: 0
-Tempo: 6.43 segundos
+Tempo: 3.16 segundos
 ---------------------------------
 Modelo: vgg11
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0
-Acurácia Média: 0.7727272727272727
+Acurácia Média: 0.5454545454545454
 Melhor replicação: 0
-Tempo: 6.37 segundos
+Tempo: 3.19 segundos
 ---------------------------------
 Modelo: vgg11
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0.0001
-Acurácia Média: 0.4090909090909091
+Acurácia Média: 0.3181818181818182
 Melhor replicação: 0
-Tempo: 6.29 segundos
+Tempo: 3.18 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
+Modelo: vgg19
 Épocas: 1
 Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.5
+Acurácia Média: 0.7272727272727273
 Melhor replicação: 0
-Tempo: 6.20 segundos
+Tempo: 3.29 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
+Modelo: vgg19
 Épocas: 1
 Learning Rate: 0.001
+Weight Decay: 0.0001
+Acurácia Média: 0.5
+Melhor replicação: 0
+Tempo: 3.37 segundos
+---------------------------------
+Modelo: vgg19
+Épocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0
+Acurácia Média: 0.7272727272727273
+Melhor replicação: 0
+Tempo: 2.99 segundos
+---------------------------------
+Modelo: vgg19
+Épocas: 1
+Learning Rate: 0.0001
 Weight Decay: 0.0001
 Acurácia Média: 0.5909090909090909
 Melhor replicação: 0
-Tempo: 6.20 segundos
+Tempo: 3.29 segundos
+---------------------------------
+Modelo: vgg19
+Épocas: 1
+Learning Rate: 1e-05
+Weight Decay: 0
+Acurácia Média: 0.5
+Melhor replicação: 0
+Tempo: 3.37 segundos
+---------------------------------
+Modelo: vgg19
+Épocas: 1
+Learning Rate: 1e-05
+Weight Decay: 0.0001
+Acurácia Média: 0.6818181818181818
+Melhor replicação: 0
+Tempo: 3.02 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0
+Acurácia Média: 0.6818181818181818
+Melhor replicação: 0
+Tempo: 5.41 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+Épocas: 1
+Learning Rate: 0.001
+Weight Decay: 0.0001
+Acurácia Média: 0.4090909090909091
+Melhor replicação: 0
+Tempo: 2.70 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
@@ -68,30 +126,30 @@ Learning Rate: 0.0001
 Weight Decay: 0
 Acurácia Média: 0.5
 Melhor replicação: 0
-Tempo: 6.18 segundos
+Tempo: 3.01 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0.0001
-Acurácia Média: 0.22727272727272727
+Acurácia Média: 0.36363636363636365
 Melhor replicação: 0
-Tempo: 6.19 segundos
+Tempo: 5.38 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0
-Acurácia Média: 0.6818181818181818
+Acurácia Média: 0.45454545454545453
 Melhor replicação: 0
-Tempo: 6.19 segundos
+Tempo: 2.69 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0.0001
-Acurácia Média: 0.6363636363636364
+Acurácia Média: 0.5454545454545454
 Melhor replicação: 0
-Tempo: 6.18 segundos
+Tempo: 3.01 segundos
 ---------------------------------
-Tempo total para o sistema Centralizado Multiprocesso: 13.09 segundos
+Tempo total para o sistema Centralizado Multiprocesso: 40.67 segundos

@@ -1,97 +1,107 @@
-Modelo: vgg11
-Épocas: 1
+Melhor conjunto de parametros: 
+Modelo: vgg19
+ï¿½pocas: 1
 Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.5
-Melhor replicação: 0
-Tempo: 0.51 segundos
+Acurï¿½cia Mï¿½dia: 0.7727272727272727
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 2.09 segundos
 ---------------------------------
-Modelo: vgg11
-Épocas: 1
-Learning Rate: 0.001
-Weight Decay: 0.0001
-Acurácia Média: 0.5909090909090909
-Melhor replicação: 0
-Tempo: 0.47 segundos
----------------------------------
-Modelo: vgg11
-Épocas: 1
-Learning Rate: 0.0001
-Weight Decay: 0
-Acurácia Média: 0.5909090909090909
-Melhor replicação: 0
-Tempo: 0.45 segundos
----------------------------------
-Modelo: vgg11
-Épocas: 1
-Learning Rate: 0.0001
-Weight Decay: 0.0001
-Acurácia Média: 0.3181818181818182
-Melhor replicação: 0
-Tempo: 0.46 segundos
----------------------------------
-Modelo: vgg11
-Épocas: 1
-Learning Rate: 1e-05
-Weight Decay: 0
-Acurácia Média: 0.45454545454545453
-Melhor replicação: 0
-Tempo: 0.51 segundos
----------------------------------
-Modelo: vgg11
-Épocas: 1
-Learning Rate: 1e-05
-Weight Decay: 0.0001
-Acurácia Média: 0.4090909090909091
-Melhor replicação: 0
-Tempo: 0.45 segundos
----------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
+
+==============================================Modelo: vgg11
+ï¿½pocas: 1
 Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.5454545454545454
-Melhor replicação: 0
-Tempo: 0.47 segundos
+Acurï¿½cia Mï¿½dia: 0.5909090909090909
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.91 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
+Modelo: vgg11
+ï¿½pocas: 1
 Learning Rate: 0.001
 Weight Decay: 0.0001
-Acurácia Média: 0.5454545454545454
-Melhor replicação: 0
-Tempo: 0.46 segundos
+Acurï¿½cia Mï¿½dia: 0.5
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.82 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
+Modelo: vgg11
+ï¿½pocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0
-Acurácia Média: 0.36363636363636365
-Melhor replicação: 0
-Tempo: 0.52 segundos
+Acurï¿½cia Mï¿½dia: 0.7272727272727273
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.74 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
+Modelo: vgg11
+ï¿½pocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0.0001
-Acurácia Média: 0.7272727272727273
-Melhor replicação: 0
-Tempo: 0.49 segundos
+Acurï¿½cia Mï¿½dia: 0.6818181818181818
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.71 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
-Learning Rate: 1e-05
+Modelo: vgg19
+ï¿½pocas: 1
+Learning Rate: 0.001
 Weight Decay: 0
-Acurácia Média: 0.5909090909090909
-Melhor replicação: 0
-Tempo: 0.49 segundos
+Acurï¿½cia Mï¿½dia: 0.7727272727272727
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 2.09 segundos
+---------------------------------
+Modelo: vgg19
+ï¿½pocas: 1
+Learning Rate: 0.001
+Weight Decay: 0.0001
+Acurï¿½cia Mï¿½dia: 0.5454545454545454
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.94 segundos
+---------------------------------
+Modelo: vgg19
+ï¿½pocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0
+Acurï¿½cia Mï¿½dia: 0.36363636363636365
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 2.08 segundos
+---------------------------------
+Modelo: vgg19
+ï¿½pocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0.0001
+Acurï¿½cia Mï¿½dia: 0.6818181818181818
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.78 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
-Épocas: 1
-Learning Rate: 1e-05
-Weight Decay: 0.0001
-Acurácia Média: 0.22727272727272727
-Melhor replicação: 0
-Tempo: 0.51 segundos
+ï¿½pocas: 1
+Learning Rate: 0.001
+Weight Decay: 0
+Acurï¿½cia Mï¿½dia: 0.5454545454545454
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.93 segundos
 ---------------------------------
-Tempo total para o sistema Centralizado Único Processo: 5.78 segundos
+Modelo: mobilenet_v3_large
+ï¿½pocas: 1
+Learning Rate: 0.001
+Weight Decay: 0.0001
+Acurï¿½cia Mï¿½dia: 0.6818181818181818
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 2.06 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+ï¿½pocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0
+Acurï¿½cia Mï¿½dia: 0.36363636363636365
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.74 segundos
+---------------------------------
+Modelo: mobilenet_v3_large
+ï¿½pocas: 1
+Learning Rate: 0.0001
+Weight Decay: 0.0001
+Acurï¿½cia Mï¿½dia: 0.5454545454545454
+Melhor replicaï¿½ï¿½o: 0
+Tempo: 1.95 segundos
+---------------------------------
+Tempo total para o sistema Centralizado ï¿½nico Processo: 22.77 segundos

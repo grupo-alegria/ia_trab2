@@ -151,6 +151,17 @@ if __name__ == '__main__':
 
                     treinamentos_str = ""
                     
+                    melhorReplicacaoJSON = (
+                        f"Modelo: {""}\n"
+                            f"Épocas: {0}\n"
+                            f"Learning Rate: {0}\n"
+                            f"Weight Decay: {0}\n"
+                            f"Acurácia Média: {0}\n"
+                            f"Melhor replicação: {0}\n"
+                            f"Tempo: {0:.2f} segundos\n"
+                            "---------------------------------\n"
+                    )
+                    melhorAcuracia = 0
                     # Processar resultados
                     for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
                         resultado = ( 
@@ -163,13 +174,19 @@ if __name__ == '__main__':
                             f"Tempo: {duracao:.2f} segundos\n"
                             "---------------------------------\n"
                         )
+                        if melhorAcuracia < acc_media:
+                            melhorReplicacaoJSON = resultado
+                            melhorAcuracia = acc_media
+
                         treinamentos_str += resultado
 
                     fim_sistema = time.time()
                     treinamentos_str += f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
                     print(treinamentos_str)
-                    with open("centralizado_multiplos_processos.txt", "w") as arquivo:
-                        arquivo.write(treinamentos_str)
+                    treinamentos = ""
+                    treinamentos = f"Melhor conjunto de parametros do Objeto 2: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
+                    with open("distribuido_obj_02.txt", "w") as arquivo:
+                        arquivo.write(treinamentos)
                         
                     respond_client("processamento concluido!")
 

@@ -1,48 +1,43 @@
+Melhor replicação do Objeto 1: 
 Modelo: mobilenet_v3_large
 Épocas: 1
-Learning Rate: 0.001
-Weight Decay: 0.0001
-Acurácia Média: 0.5227272727272727
-Melhor replicação: 0
-Tempo: 10.84 segundos
----------------------------------
-Modelo: mobilenet_v3_large
-Épocas: 1
-Learning Rate: 0.001
+Learning Rate: 1e-05
 Weight Decay: 0
-Acurácia Média: 0.45454545454545453
+Acurácia Média: 0.7272727272727273
 Melhor replicação: 0
-Tempo: 11.95 segundos
+Tempo: 5.48 segundos
 ---------------------------------
-Modelo: mobilenet_v3_large
+
+==============================================Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0
-Acurácia Média: 0.38636363636363635
-Melhor replicação: 1
-Tempo: 11.99 segundos
+Acurácia Média: 0.2727272727272727
+Melhor replicação: 0
+Tempo: 5.73 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 0.0001
 Weight Decay: 0.0001
-Acurácia Média: 0.4318181818181818
+Acurácia Média: 0.5909090909090909
 Melhor replicação: 0
-Tempo: 12.28 segundos
+Tempo: 5.70 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0
-Acurácia Média: 0.5227272727272727
-Melhor replicação: 1
-Tempo: 12.33 segundos
+Acurácia Média: 0.7272727272727273
+Melhor replicação: 0
+Tempo: 5.48 segundos
 ---------------------------------
 Modelo: mobilenet_v3_large
 Épocas: 1
 Learning Rate: 1e-05
 Weight Decay: 0.0001
-Acurácia Média: 0.6363636363636364
+Acurácia Média: 0.36363636363636365
 Melhor replicação: 0
-Tempo: 12.34 segundos
+Tempo: 5.46 segundos
 ---------------------------------
+Tempo total para o sistema Centralizado Multiprocesso: 21.92 segundos
