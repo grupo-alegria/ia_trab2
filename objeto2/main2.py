@@ -168,5 +168,7 @@ if __name__ == '__main__':
                     fim_sistema = time.time()
                     treinamentos_str += f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
                     print(treinamentos_str)
+                    with open("centralizado_multiplos_processos.txt", "w") as arquivo:
+                        arquivo.write(treinamentos_str)
 
                     

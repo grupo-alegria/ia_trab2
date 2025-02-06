@@ -234,7 +234,7 @@ if __name__ == '__main__':
         print(treinamentos_str)
 
     elif escolha == "3":
-        print('Sistema Distribuído e Multiprocesso.');
+        print('Sistema Distribuído e Multiprocesso.')
 
         # Conectando aos dois nós
         asyncio.run(mainDistributed())
