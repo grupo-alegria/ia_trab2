@@ -239,14 +239,14 @@ if __name__ == '__main__':
         
         # Configurações para treinamento do modelo
         replicacoes = 1  # Número de repetições para treinar o modelo
-        #model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
-        model_names = ['vgg11', 'vgg19', 'mobilenet_v3_large']
-        epochs = [1]  # Número de épocas para treinamento
-        learning_rates = [0.001, 0.0001]  # Taxas de aprendizado
+        model_names = ['mobilenet_v3_small', 'mobilenet_v3_large']
+        epochs = [5, 10]  # Número de épocas para treinamento
+        learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
         weight_decays = [0, 0.0001]  # Decaimento de peso
 
         # Gera todas as combinações possíveis de parâmetros
-        parameter_combinations = product(model_names, epochs, learning_rates, weight_decays)
+        #parameter_combinations = product(model_names, epochs, learning_rates, weight_decays)
+        parameter_combinations = product(weight_decays, learning_rates, epochs, model_names)
 
         #Define a String responsável por registrar os logs dos treinamentos
         treinamentos_str = ""
@@ -262,7 +262,8 @@ if __name__ == '__main__':
                     )
         melhorAcuracia = 0
         # Itera sobre cada combinação de parâmetros
-        for model_name, num_epochs, learning_rate, weight_decay in parameter_combinations:
+        #for model_name, num_epochs, learning_rate, weight_decay in parameter_combinations:
+        for weight_decay, learning_rate, num_epochs, model_name in parameter_combinations:
             inicio = time.time()  # Marca o início do tempo de treinamento
 
             # Treina a CNN utilizando os parâmetros definidos
@@ -292,7 +293,7 @@ if __name__ == '__main__':
         treinamentos_str = treinamentos_str+f"Tempo total para o sistema Centralizado Único Processo: {fim_sistema - inicio_sistema:.2f} segundos\n"
         print(treinamentos_str)
         treinamentos = ""
-        treinamentos = f"Melhor conjunto de parametros: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"        
+        treinamentos = f"Melhor conjunto de parametros: \n{melhorReplicacaoJSON}\n==============================================\n{treinamentos_str}"        
 
         with open("centralizado_unico_processo.txt", "w") as arquivo:
             arquivo.write(treinamentos)
@@ -301,77 +302,85 @@ if __name__ == '__main__':
         inicio_sistema = time.time()  # Início do sistema centralizado multiprocesso
         print("Sistema Centralizado em Multiprocesso Escolhido.")
 
-        # Obter número de núcleos disponíveis
-        #num_nucleos = cpu_count()
-        num_nucleos = max(1, cpu_count() // 2)
-        print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
 
-        # Define as dimensões das imagens (224x224) e aplica as transformações
+
         data_transforms = define_transforms(224, 224)
         train_data, validation_data, test_data = read_images(data_transforms)
-    
+
         # Configurações para treinamento do modelo
         replicacoes = 1
-        #model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
         model_names = ['vgg11', 'vgg19', 'mobilenet_v3_large']
         epochs = [1]
         learning_rates = [0.001, 0.0001, 0.00001]
         weight_decays = [0, 0.0001]
 
-        parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
-        args = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, train_data, validation_data, test_data)
-                for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+        # Gera as combinações na ordem desejada: weight_decays, learning_rates, epochs, model_names, replicacoes
+        parameter_combinations = list(product(weight_decays, learning_rates, epochs, model_names, [replicacoes]))
 
         # Gerenciador para compartilhamento de dados entre processos
         with Manager() as manager:
             shared_train_data = manager.list(train_data)
             shared_validation_data = manager.list(validation_data)
             shared_test_data = manager.list(test_data)
-
-            args = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
-                    shared_train_data, shared_validation_data, shared_test_data)
-                    for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
-
-            # Multiprocessamento usando memória compartilhada
+            
+            # Reordena as combinações para criar os argumentos na ordem que a função espera
+            # comb[0] é o weight_decay
+            # comb[1] é o learning_rate
+            # comb[2] é o número de épocas
+            # comb[3] é o model_name
+            # comb[4] é o replicacoes
+            args = [
+                (comb[3], comb[2], comb[1], comb[0], comb[4],
+                shared_train_data, shared_validation_data, shared_test_data)
+                for comb in parameter_combinations
+            ]
+            
+            # Define o número de núcleos a serem usados (exemplo: metade dos núcleos disponíveis)
+            num_nucleos = max(1, cpu_count() // 2)
+            print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
+            
+            # Multiprocessamento usando Pool
             with Pool(processes=num_nucleos) as pool:
                 results = pool.map(train_model_parallel, args)
-            treinamentos_str=""
-
+            
+            # Exibe os resultados
+            treinamentos_str = ""
             melhorReplicacaoJSON = (
-                        "Modelo: {""}\n"
-                            f"Épocas: {0}\n"
-                            f"Learning Rate: {0}\n"
-                            f"Weight Decay: {0}\n"
-                            f"Acurácia Média: {0}\n"
-                            f"Melhor replicação: {0}\n"
-                            f"Tempo: {0:.2f} segundos\n"
-                            "---------------------------------\n"
-                    )
-            melhorAcuracia = 0
-        for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
-            resultado = ( 
-                
-                f"Modelo: {model_name}\n"
-                f"Épocas: {num_epochs}\n"
-                f"Learning Rate: {learning_rate}\n"
-                f"Weight Decay: {weight_decay}\n"
-                f"Acurácia Média: {acc_media}\n"
-                f"Melhor replicação: {rep_max}\n"
-                f"Tempo: {duracao:.2f} segundos\n"
+                "Modelo: {""}\n"
+                f"Épocas: {0}\n"
+                f"Learning Rate: {0}\n"
+                f"Weight Decay: {0}\n"
+                f"Acurácia Média: {0}\n"
+                f"Melhor replicação: {0}\n"
+                f"Tempo: {0:.2f} segundos\n"
                 "---------------------------------\n"
             )
-            if melhorAcuracia < acc_media:
-                melhorReplicacaoJSON = resultado
-                melhorAcuracia = acc_media
+            melhorAcuracia = 0
+            for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
+                resultado = (
+                    f"Modelo: {model_name}\n"
+                    f"Épocas: {num_epochs}\n"
+                    f"Learning Rate: {learning_rate}\n"
+                    f"Weight Decay: {weight_decay}\n"
+                    f"Acurácia Média: {acc_media}\n"
+                    f"Melhor replicação: {rep_max}\n"
+                    f"Tempo: {duracao:.2f} segundos\n"
+                    "---------------------------------\n"
+                )
+                if melhorAcuracia < acc_media:
+                    melhorReplicacaoJSON = resultado
+                    melhorAcuracia = acc_media
 
-            treinamentos_str = treinamentos_str+resultado
+                treinamentos_str += resultado
 
-        print(treinamentos_str)
+
+
+        
         fim_sistema = time.time()
         treinamentos_str = treinamentos_str+f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
         
         treinamentos = ""
-        treinamentos = f"Melhor conjunto de parametros: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
+        treinamentos = f"Melhor conjunto de parametros: \n{melhorReplicacaoJSON}\n==============================================\n{treinamentos_str}"
         
         with open("centralizado_multiplos_processos.txt", "w") as arquivo:
             arquivo.write(treinamentos)
