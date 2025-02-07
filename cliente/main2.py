@@ -251,7 +251,7 @@ if __name__ == '__main__':
         #Define a String responsável por registrar os logs dos treinamentos
         treinamentos_str = ""
         melhorReplicacaoJSON = (
-                        f"Modelo: {""}\n"
+                        "Modelo: {""}\n"
                             f"Épocas: {0}\n"
                             f"Learning Rate: {0}\n"
                             f"Weight Decay: {0}\n"
@@ -338,7 +338,7 @@ if __name__ == '__main__':
             treinamentos_str=""
 
             melhorReplicacaoJSON = (
-                        f"Modelo: {""}\n"
+                        "Modelo: {""}\n"
                             f"Épocas: {0}\n"
                             f"Learning Rate: {0}\n"
                             f"Weight Decay: {0}\n"
