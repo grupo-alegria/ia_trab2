@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
                     treinamentos_str = ""
                     melhorReplicacaoJSON = (
-                        f"Modelo: {""}\n"
+                        "Modelo: \n"
                             f"Épocas: {0}\n"
                             f"Learning Rate: {0}\n"
                             f"Weight Decay: {0}\n"

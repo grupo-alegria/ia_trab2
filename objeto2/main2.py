@@ -110,15 +110,6 @@ if __name__ == '__main__':
                     weight_decays = mensagem.get("weight_decays", "Parâmetro 'weight_decays' não encontrado")
                     num_tasks = mensagem.get("tasks", "Parâmetro 'tasks' não encontrado")
 
-                    # parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
-                    # tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes)
-                    #         for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
-                    
-                    # tasks_selected = tasks[-num_tasks:]
-                    # print(len(tasks_selected))
-
-                    # Obter número de núcleos disponíveis
-                    #num_nucleos = cpu_count()
                     num_nucleos = max(1, cpu_count() // 2)
                     print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
 
@@ -132,10 +123,6 @@ if __name__ == '__main__':
                         shared_validation_data = manager.list(validation_data)
                         shared_test_data = manager.list(test_data)
 
-                        # Criar `args` com **apenas as tasks selecionadas**
-                        # args = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
-                        #         shared_train_data, shared_validation_data, shared_test_data)
-                        #         for model_name, num_epochs, learning_rate, weight_decay, replicacoes in tasks_selected]
                         
                         parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
                         tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
@@ -152,7 +139,7 @@ if __name__ == '__main__':
                     treinamentos_str = ""
                     
                     melhorReplicacaoJSON = (
-                        f"Modelo: {""}\n"
+                        "Modelo: {""}\n"
                             f"Épocas: {0}\n"
                             f"Learning Rate: {0}\n"
                             f"Weight Decay: {0}\n"
