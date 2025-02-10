@@ -123,11 +123,13 @@ if __name__ == '__main__':
                         shared_train_data = manager.list(train_data)
                         shared_validation_data = manager.list(validation_data)
                         shared_test_data = manager.list(test_data)
-
-                        parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
-                        tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
-                                shared_train_data, shared_validation_data, shared_test_data)
-                            for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+                        
+                        parameter_combinations = list(product(weight_decays, learning_rates, epochs, model_names, [replicacoes]))
+                        tasks = [
+                            (comb[3], comb[2], comb[1], comb[0], comb[4],
+                            shared_train_data, shared_validation_data, shared_test_data)
+                            for comb in parameter_combinations
+                        ]
                     
                         tasks_selected = tasks[:num_tasks]
                         print(f"tasks a serem processadas: {len(tasks_selected)}.")
@@ -163,7 +165,7 @@ if __name__ == '__main__':
                     treinamentos_str += f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
                     print(treinamentos_str)
                     treinamentos = ""
-                    treinamentos = f"Melhor conjunto de parametros do {NAME}: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
+                    treinamentos = f"Melhor conjunto de parametros do {NAME}: \n{melhorReplicacaoJSON}\n==============================================\n{treinamentos_str}"
                     with open("distribuido_obj_01.txt", "w") as arquivo:
                         arquivo.write(treinamentos)
                         

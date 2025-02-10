@@ -95,8 +95,8 @@ if __name__ == '__main__':
                     print('Obtendo o número de CPUs')
                     numnucleos = get_cpu_count()
                     print(numnucleos," nucleos.")
-                    respond_client(2)
-                    # respond_client(numnucleos)
+                    # respond_client(2)
+                    respond_client(numnucleos)
                 
                 elif action == "start_process":
                     print('Processamento iniciado')
@@ -124,10 +124,12 @@ if __name__ == '__main__':
                         shared_validation_data = manager.list(validation_data)
                         shared_test_data = manager.list(test_data)
 
-                        parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
-                        tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
-                                shared_train_data, shared_validation_data, shared_test_data)
-                            for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
+                        parameter_combinations = list(product(weight_decays, learning_rates, epochs, model_names, [replicacoes]))
+                        tasks = [
+                            (comb[3], comb[2], comb[1], comb[0], comb[4],
+                            shared_train_data, shared_validation_data, shared_test_data)
+                            for comb in parameter_combinations
+                        ]
                     
                         tasks_selected = tasks[-num_tasks:]
                         print(f"tasks a serem processadas: {len(tasks_selected)}.")
@@ -163,7 +165,7 @@ if __name__ == '__main__':
                     treinamentos_str += f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
                     print(treinamentos_str)
                     treinamentos = ""
-                    treinamentos = f"Melhor conjunto de parametros do {NAME}: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
+                    treinamentos = f"Melhor conjunto de parametros do {NAME}: \n{melhorReplicacaoJSON}\n==============================================\n{treinamentos_str}"
                     with open("distribuido_obj_02.txt", "w") as arquivo:
                         arquivo.write(treinamentos)
                         
