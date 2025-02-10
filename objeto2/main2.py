@@ -8,6 +8,7 @@ import torch  # Importa o PyTorch, que é utilizado para criar redes neurais e t
 from torchvision import datasets  # Importa os datasets da biblioteca torchvision
 from torchvision.transforms import v2  # Importa as transformações de imagens da torchvision
 import time
+import threading
 
 # Configurações do Multicast
 MULTICAST_GROUP = '224.1.1.1'  # Mesmo grupo do servidor
@@ -123,31 +124,22 @@ if __name__ == '__main__':
                         shared_validation_data = manager.list(validation_data)
                         shared_test_data = manager.list(test_data)
 
-                        
                         parameter_combinations = list(product(model_names, epochs, learning_rates, weight_decays, [replicacoes]))
                         tasks = [(model_name, num_epochs, learning_rate, weight_decay, replicacoes, 
                                 shared_train_data, shared_validation_data, shared_test_data)
                             for model_name, num_epochs, learning_rate, weight_decay, replicacoes in parameter_combinations]
                     
                         tasks_selected = tasks[-num_tasks:]
-                        print(len(tasks_selected))
+                        print(f"tasks a serem processadas: {len(tasks_selected)}.")
 
                         # Multiprocessamento usando Pool
                         with Pool(processes=num_nucleos) as pool:
                             results = pool.map(train_model_parallel, tasks_selected)
-
+                            
+                    # Cria um lock para proteger a seção crítica
+                    lock = threading.Lock()
                     treinamentos_str = ""
-                    
-                    melhorReplicacaoJSON = (
-                        "Modelo: {""}\n"
-                            f"Épocas: {0}\n"
-                            f"Learning Rate: {0}\n"
-                            f"Weight Decay: {0}\n"
-                            f"Acurácia Média: {0}\n"
-                            f"Melhor replicação: {0}\n"
-                            f"Tempo: {0:.2f} segundos\n"
-                            "---------------------------------\n"
-                    )
+                    melhorReplicacaoJSON = ""
                     melhorAcuracia = 0
                     # Processar resultados
                     for model_name, num_epochs, learning_rate, weight_decay, acc_media, rep_max, duracao in results:
@@ -161,17 +153,17 @@ if __name__ == '__main__':
                             f"Tempo: {duracao:.2f} segundos\n"
                             "---------------------------------\n"
                         )
-                        if melhorAcuracia < acc_media:
-                            melhorReplicacaoJSON = resultado
-                            melhorAcuracia = acc_media
-
-                        treinamentos_str += resultado
+                        with lock:
+                            if melhorAcuracia < acc_media:
+                                melhorReplicacaoJSON = resultado
+                                melhorAcuracia = acc_media
+                            treinamentos_str += resultado
 
                     fim_sistema = time.time()
                     treinamentos_str += f"Tempo total para o sistema Centralizado Multiprocesso: {fim_sistema - inicio_sistema:.2f} segundos"
                     print(treinamentos_str)
                     treinamentos = ""
-                    treinamentos = f"Melhor conjunto de parametros do Objeto 2: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
+                    treinamentos = f"Melhor conjunto de parametros do {NAME}: \n{melhorReplicacaoJSON}\n=============================================={treinamentos_str}"
                     with open("distribuido_obj_02.txt", "w") as arquivo:
                         arquivo.write(treinamentos)
                         
