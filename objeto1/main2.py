@@ -111,7 +111,7 @@ if __name__ == '__main__':
                     weight_decays = mensagem.get("weight_decays", "Parâmetro 'weight_decays' não encontrado")
                     num_tasks = mensagem.get("tasks", "Parâmetro 'tasks' não encontrado")
 
-                    num_nucleos = max(1, cpu_count() // 2)
+                    num_nucleos = max(1, cpu_count() -1)
                     print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
 
                     # Define as dimensões das imagens (224x224) e aplica as transformações

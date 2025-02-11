@@ -146,10 +146,10 @@ def mainDistributed():
     
     
     
-    replicacoes = 1  # Número de repetições para treinar o modelo
-    # model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
-    model_names = ['alexnet', 'mobilenet_v3_large']
-    epochs = [1]  # Número de épocas para treinamento
+    replicacoes = 10  # Número de repetições para treinar o modelo
+    model_names = ['alexnet', 'mobilenet_v3_large', 'mobilenet_v3_small', 'resnet18', 'resnet101', 'vgg11', 'vgg19']
+    #model_names = ['alexnet', 'mobilenet_v3_large']
+    epochs = [5, 10]  # Número de épocas para treinamento
     learning_rates = [0.001, 0.0001, 0.00001]  # Taxas de aprendizado
     weight_decays = [0, 0.0001]  # Decaimento de peso
 
@@ -308,9 +308,9 @@ if __name__ == '__main__':
         train_data, validation_data, test_data = read_images(data_transforms)
 
         # Configurações para treinamento do modelo
-        replicacoes = 1
-        model_names = ['vgg11', 'vgg19', 'mobilenet_v3_large']
-        epochs = [1]
+        replicacoes = 10
+        model_names = ['mobilenet_v3_small']
+        epochs = [5, 10]
         learning_rates = [0.001, 0.0001, 0.00001]
         weight_decays = [0, 0.0001]
 
@@ -336,7 +336,7 @@ if __name__ == '__main__':
             ]
             
             # Define o número de núcleos a serem usados (exemplo: metade dos núcleos disponíveis)
-            num_nucleos = max(1, cpu_count() // 2)
+            num_nucleos = max(1, cpu_count() - 1)
             print(f"Usando {num_nucleos} núcleos para treinamento paralelo.")
             
             # Multiprocessamento usando Pool
